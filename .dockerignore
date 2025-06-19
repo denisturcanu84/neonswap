@@ -1,0 +1,47 @@
+# Build artifacts
+build/
+.dart_tool/
+.pub-cache/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Flutter/Dart specific
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+
+# Android/iOS build files
+android/build/
+ios/build/
+linux/build/
+macos/build/
+windows/build/
+
+# Documentation
+README.md
+doc/
+
+# Deployment files
+nixpacks.toml
+docker-compose.yml
