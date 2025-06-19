@@ -6,16 +6,21 @@ FLUTTER_VERSION = "3.16.9"
 
 [phases.setup]
 nixPkgs = [
-  "dart_3-2-6",
+  "dart",
   "flutter",
   "git",
   "curl",
-  "unzip"
+  "unzip",
+  "wget"
+]
+aptPkgs = [
+  "ca-certificates"
 ]
 
 [phases.install]
 dependsOn = ["setup"]
 cmds = [
+  "flutter doctor --android-licenses || true",
   "dart pub get"
 ]
 
@@ -26,4 +31,4 @@ cmds = [
 ]
 
 [start]
-cmd = "flutter run --web-port=8080 --web-hostname=0.0.0.0"
+cmd = "cd build/web && python3 -m http.server 8080"
