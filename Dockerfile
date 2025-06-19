@@ -47,38 +47,18 @@ COPY --chown=flutter:flutter . .
 RUN flutter clean
 RUN flutter build web --release --no-tree-shake-icons
 
-FROM nginx:alpine AS production
+FROM python:3.11-slim AS production
 
-COPY --from=build /home/flutter/app/build/web /usr/share/nginx/html
+# Install basic packages
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY <<EOF /etc/nginx/conf.d/default.conf
-server {
-    listen 8080;
-    server_name localhost;
+# Copy the built web app from the build stage
+COPY --from=build /home/flutter/app/build/web /app
 
-    location / {
-        root /usr/share/nginx/html;
-        index index.html index.htm;
-        try_files \$uri \$uri/ /index.html;
-
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
-            expires 1y;
-            add_header Cache-Control "public, immutable";
-        }
-
-        add_header X-Frame-Options "SAMEORIGIN" always;
-        add_header X-Content-Type-Options "nosniff" always;
-        add_header X-XSS-Protection "1; mode=block" always;
-    }
-
-    location ~* \.(html)$ {
-        add_header Cache-Control "no-cache, no-store, must-revalidate";
-        add_header Pragma "no-cache";
-        add_header Expires "0";
-    }
-}
-EOF
+WORKDIR /app
 
 EXPOSE 8080
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["python3", "-m", "http.server", "8080", "--bind", "0.0.0.0"]
