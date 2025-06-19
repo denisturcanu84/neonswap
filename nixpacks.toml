@@ -1,0 +1,30 @@
+[providers]
+dart = "3.2.6"
+
+[variables]
+DART_SDK_VERSION = "3.2.6"
+FLUTTER_VERSION = "3.16.9"
+
+[phases.setup]
+nixPkgs = [
+  "dart",
+  "git",
+  "curl",
+  "unzip"
+]
+
+[phases.install]
+dependsOn = ["setup"]
+cmds = [
+  "dart pub get"
+]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = [
+  "dart pub run build_runner build --delete-conflicting-outputs || echo 'No build_runner found, skipping'",
+  "flutter build web --release"
+]
+
+[start]
+cmd = "flutter run --web-port=8080 --web-hostname=0.0.0.0"
